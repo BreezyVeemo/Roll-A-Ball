@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     public float speed = 1;
     public float speed2;
+    int pickupCount;
     // Start is called before the first frame update
     void Start()
     {
         //Get the rigidbody component of the gameObject
         rb = GetComponent<Rigidbody>();
+        //Get the number of pickups in the scene
+        pickupCount = GameObject.FindGameObjectsWithTag("Pickup").Length;
     }
 
     // Update is called once per frame
@@ -35,7 +38,19 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("MURDER");
             Destroy(other.gameObject);
+            //Decrement the pickup counter
+            pickupCount -= 1;
+            if (pickupCount == 0)
+            {
+                WinGame();
+            }
+
         }
 
+    }
+
+    void WinGame()
+    {
+        Debug.Log("Winner bitches");
     }
 }
