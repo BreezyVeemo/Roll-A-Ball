@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     int pickupCount;
     Timer timer;
 
+    [Header("UI")]
+    public GameObject winPanel;
+
+
 
 
     // Start is called before the first frame update
@@ -25,6 +29,9 @@ public class PlayerController : MonoBehaviour
         //Get the Timer object
         timer = FindObjectOfType<Timer>();
         timer.StartTimer();
+
+        //Disables the win panel while the game runs
+        winPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -58,7 +65,8 @@ public class PlayerController : MonoBehaviour
     //Win Message display
     void WinGame()
     {
-        Debug.Log("Winner bitches");
+        //makes the win message appear once all pickups are collected
+        winPanel.SetActive(true);
         Debug.Log("Time: " + timer.GetTime().ToString("F2"));
     }
     //Display count of remaining pickups
