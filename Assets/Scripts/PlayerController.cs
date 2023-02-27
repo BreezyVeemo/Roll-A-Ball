@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("UI")]
     public GameObject winPanel;
+    public TMP_Text winTime;
 
 
 
@@ -67,7 +69,8 @@ public class PlayerController : MonoBehaviour
     {
         //makes the win message appear once all pickups are collected
         winPanel.SetActive(true);
-        Debug.Log("Time: " + timer.GetTime().ToString("F2"));
+        //Set the time onto the win message text
+        winTime.text = (("Time: ") + timer.GetTime().ToString("F2"));
     }
     //Display count of remaining pickups
     void CheckPickups()
