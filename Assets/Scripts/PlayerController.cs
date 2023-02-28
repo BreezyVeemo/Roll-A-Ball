@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public float speed = 1;
     public float speed2;
     int pickupCount;
+    int collectedCount;
+    int pickupTotal;
     Timer timer;
 
     [Header("UI")]
@@ -28,12 +30,17 @@ public class PlayerController : MonoBehaviour
         //Get the rigidbody component of the gameObject
         rb = GetComponent<Rigidbody>();
         //Get the number of pickups in the scene and updates the score UI to reflect the count
-        pickupCount = GameObject.FindGameObjectsWithTag("Pickup").Length;
-        scoreText.text = (("Pickups Remaining: ") + pickupCount);
+        pickupTotal = GameObject.FindGameObjectsWithTag("Pickup").Length;
+        //The count will be changed later, the total will not
+        pickupCount = pickupTotal;
+        //Alternative collectedcount variable for counting the score UP rather than DOWN (this is the currently used system)
+        collectedCount = 0;
+        //Display the current count of collected pickups, compared to the total
+        scoreText.text = (("Collected: ") + collectedCount + ("/") + pickupTotal);
 
         //Display pickup count
         CheckPickups();
-        //Get the Timer object
+        //Get the Timer object and start the timer
         timer = FindObjectOfType<Timer>();
         timer.StartTimer();
 
@@ -56,6 +63,8 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         //Add force to rigidbody based on new movement vector
         rb.AddForce(movement * speed);
+
+        //Update the time UI to count in realtime
         timerText.text = (("Time: ") + timer.GetTime().ToString("F2"));
     }
 
@@ -68,9 +77,13 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Pickup"))
         {
             Destroy(other.gameObject);
-            //Decrement the pickup counter and update the UI count
+            //Decrement the pickup counter and update the UI count (with the now unused code)
+            //scoreText.text = (("Pickups Remaining: ") + pickupCount);
             pickupCount -= 1;
-            scoreText.text = (("Pickups Remaining: ") + pickupCount);
+            //Increment the collected counter and update the UI count
+            collectedCount += 1;
+            //Update the score text to reflect how many pickups have now been collected
+            scoreText.text = (("Collected: ") + collectedCount + ("/") + pickupTotal);
             //Call function to display remaining/win message
             CheckPickups();
         }
@@ -100,6 +113,14 @@ public class PlayerController : MonoBehaviour
             timer.StopTimer();
             WinGame();
         }
+    }
+
+    //TEMPORARY!!!! REMOVE WHEN DOING MODULES IN A2
+    public void RestartGame()
+    {
+        //Will find the current active scene and reload it
+        UnityEngine.SceneManagement.SceneManager.LoadScene
+            (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
 }
