@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     int pickupCount;
     int collectedCount;
     int pickupTotal;
+    bool wonGame = false;
     Timer timer;
 
     [Header("UI")]
@@ -55,6 +56,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (wonGame == true)
+            return;
         //Get the input value from horizontal axis
         float moveHorizontal = Input.GetAxis("Horizontal");
         //Get the input value from vertical axis
@@ -94,6 +97,7 @@ public class PlayerController : MonoBehaviour
     //Win Message display
     void WinGame()
     {
+        wonGame = true;
         //Turns on the win panel, deactivating the ingame panel
         inGamePanel.SetActive(false);
         winPanel.SetActive(true);
