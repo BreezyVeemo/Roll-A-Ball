@@ -11,11 +11,10 @@ public class PlayerController : MonoBehaviour
     int pickupCount;
     int collectedCount;
     int pickupTotal;
-    bool wonGame = false;
     Timer timer;
 
     [Header("UI")]
-    public GameObject winPanel;
+    public GameObject gameOverPanel;
     public TMP_Text winTime;
     public GameObject inGamePanel;
     public TMP_Text timerText;
@@ -45,8 +44,8 @@ public class PlayerController : MonoBehaviour
         timer = FindObjectOfType<Timer>();
         timer.StartTimer();
 
-        //Disables the win panel while the game runs
-        winPanel.SetActive(false);
+        //Disables the endgame panel while game runs
+        gameOverPanel.SetActive(false);
         //Enables the ingame panel while game runs
         inGamePanel.SetActive(true);
     }
@@ -56,8 +55,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (wonGame == true)
-            return;
         //Get the input value from horizontal axis
         float moveHorizontal = Input.GetAxis("Horizontal");
         //Get the input value from vertical axis
@@ -97,10 +94,10 @@ public class PlayerController : MonoBehaviour
     //Win Message display
     void WinGame()
     {
-        wonGame = true;
+
         //Turns on the win panel, deactivating the ingame panel
         inGamePanel.SetActive(false);
-        winPanel.SetActive(true);
+        gameOverPanel.SetActive(true);
         //Set the time onto the win message text
         winTime.text = (("Time: ") + timer.GetTime().ToString("F2"));
     }
@@ -119,12 +116,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //TEMPORARY!!!! REMOVE WHEN DOING MODULES IN A2
-    public void RestartGame()
-    {
-        //Will find the current active scene and reload it
-        UnityEngine.SceneManagement.SceneManager.LoadScene
-            (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-    }
 
 }
