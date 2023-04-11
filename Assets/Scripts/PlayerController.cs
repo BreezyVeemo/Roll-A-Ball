@@ -13,6 +13,11 @@ public class PlayerController : MonoBehaviour
     int pickupTotal;
     Timer timer;
 
+    GameObject resetPoint;
+    bool resetting = false;
+    Color originalColour;
+    bool isPaused = false;
+
     [Header("UI")]
     public GameObject gameOverPanel;
     public TMP_Text winTime;
@@ -48,13 +53,22 @@ public class PlayerController : MonoBehaviour
         gameOverPanel.SetActive(false);
         //Enables the ingame panel while game runs
         inGamePanel.SetActive(true);
+
+        //Finds the reset point and default material
+        resetPoint = GameObject.Find("ResetPoint");
+        originalColour = GetComponent<Renderer>().material.color;
     }
 
 
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (resetting)
+            return;
+
+
+
         //Get the input value from horizontal axis
         float moveHorizontal = Input.GetAxis("Horizontal");
         //Get the input value from vertical axis
@@ -62,7 +76,7 @@ public class PlayerController : MonoBehaviour
         //Create a new vector 3 based on the horizontal and vertical values
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         //Add force to rigidbody based on new movement vector
-        rb.AddForce(movement * speed);
+        rb.AddForce(movement * speed * Time.deltaTime);
 
         //Update the time UI to count in realtime
         timerText.text = (("Time: ") + timer.GetTime().ToString("F2"));
@@ -116,5 +130,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Respawn"))
+        {
+            StartCoroutine(ResetPlayer());
+        }
+    }
+
+    public IEnumerator ResetPlayer()
+    {
+        resetting = true;
+        GetComponent<Renderer>().material.color = Color.red;
+        rb.velocity = Vector3.zero;
+        Vector3 startPos = transform.position;
+        float resetSpeed = 2f;
+        var i = 0.0f;
+        var rate = 1.0f / resetSpeed;
+        while (i < 1.0f)
+        {
+            i += Time.deltaTime * rate;
+            transform.position = Vector3.Lerp(startPos, resetPoint.transform.position, i);
+            yield return null;
+        }
+        GetComponent<Renderer>().material.color = originalColour;
+        resetting = false;
+    }
 
 }
