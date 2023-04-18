@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     int pickupCount;
     int collectedCount;
     int pickupTotal;
+
+    GameController gameController;
     Timer timer;
 
     GameObject resetPoint;
@@ -47,7 +49,6 @@ public class PlayerController : MonoBehaviour
         CheckPickups();
         //Get the Timer object and start the timer
         timer = FindObjectOfType<Timer>();
-        timer.StartTimer();
 
         //Disables the endgame panel while game runs
         gameOverPanel.SetActive(false);
@@ -57,6 +58,11 @@ public class PlayerController : MonoBehaviour
         //Finds the reset point and default material
         resetPoint = GameObject.Find("ResetPoint");
         originalColour = GetComponent<Renderer>().material.color;
+
+        gameController = FindObjectOfType<GameController>();
+        timer = FindObjectOfType<Timer>();
+        if (gameController.gameType == GameType.SpeedRun)
+            StartCoroutine(timer.StartCountdown());
     }
 
 
@@ -65,6 +71,9 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (resetting)
+            return;
+
+        if (gameController.gameType == GameType.SpeedRun && !timer.IsTiming())
             return;
 
 
@@ -77,9 +86,6 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
         //Add force to rigidbody based on new movement vector
         rb.AddForce(movement * speed * Time.deltaTime);
-
-        //Update the time UI to count in realtime
-        timerText.text = (("Time: ") + timer.GetTime().ToString("F2"));
     }
 
 
@@ -112,8 +118,9 @@ public class PlayerController : MonoBehaviour
         //Turns on the win panel, deactivating the ingame panel
         inGamePanel.SetActive(false);
         gameOverPanel.SetActive(true);
-        //Set the time onto the win message text
-        winTime.text = (("Time: ") + timer.GetTime().ToString("F2"));
+
+        if (gameController.gameType == GameType.SpeedRun)
+            timer.StopTimer();
     }
 
 
