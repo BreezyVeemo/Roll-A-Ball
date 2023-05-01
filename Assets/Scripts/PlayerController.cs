@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
         resetPoint = GameObject.Find("ResetPoint");
         originalColour = GetComponent<Renderer>().material.color;
 
+
+        //Speedrun mode checks
         gameController = FindObjectOfType<GameController>();
         timer = FindObjectOfType<Timer>();
         if (gameController.gameType == GameType.SpeedRun)
@@ -143,6 +145,12 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Respawn"))
         {
             StartCoroutine(ResetPlayer());
+        }
+
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            if (gameController.wallType == WallType.Punishing)
+                StartCoroutine(ResetPlayer());
         }
     }
 

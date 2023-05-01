@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9218178598679133900}
   m_Layer: 0
   m_Name: Inside_Corner_LP
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 8675962465032198437}
   m_Layer: 0
   m_Name: Inside_Wall_LP
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
